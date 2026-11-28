@@ -42,7 +42,8 @@ const subtitleLocales = {
 	Chinese: 'zh-Hans',
 	TraditionalChinese: 'zh-Hant',
 	Japanese: 'ja',
-	Korean: 'ko'
+	Korean: 'ko',
+	Thai: 'th'
 };
 
 const CHARACTER = 'CH0180';
@@ -65,8 +66,8 @@ const AUDIO_DETAIL = [
 				"Come to think of it, it's pretty obvious. I can't believe I just realized...it was due to my negligence!"
 			],
 			Chinese: [
-				"老师。我知道自己该做什么了。",
-				"居然现在才注意到...这真是我静子，一生的疏忽！"
+				"老师，我……知道自己应该做什么了。",
+				"这种理所当然的事情一想就能明白，可我居然才意识到……这是静子我一生都不会忘记的失误！"
 			],
 			TraditionalChinese: [
 				"老師。我，明白自己該做什麼了。",
@@ -75,7 +76,8 @@ const AUDIO_DETAIL = [
 			Korean: [
 				"선생님, 저, 제가 해야 할 일을 알았어요.",
 				"생각해 보면 당연한 거였는데, 이제서야 깨닫다니… 시즈코, 일생의 불찰!"
-			]
+			],
+			Thai: ["คุณครูคะ คือ... ฉันรู้แล้วละค่ะว่าจะทำอะไร","พอมาคิดดูแล้ว... ฉันคิดว่ามันชัดเจนมากค่ะ ตอนนี้ถึงได้รู้ว่า…ชิซุโกะน่ะ ละเลยกับชีวิตเกินไปค่ะ!"]
 		}
 	},
 	{
@@ -89,8 +91,8 @@ const AUDIO_DETAIL = [
 				"There are a lot of things I want to do and have. I can't give up any of them."
 			],
 			Chinese: [
-				"虽然您已经可能知道了，但我可是很贪心的哦？",
-				"想做的事情，想要的东西，我一个也不想放弃。"
+				"您可能已经知道了，我可是很贪心的哦？",
+				"虽然有很多想做的事情，也有很多想要的东西，但我一件都不会放弃。"
 			],
 			TraditionalChinese: [
 				"雖然老師可能早就知道了，我這個人可是很貪心的唷？",
@@ -99,7 +101,8 @@ const AUDIO_DETAIL = [
 			Korean: [
 				"알고 계실지도 모르겠지만, 전 정말 욕심꾸러기라구요?",
 				"하고 싶은 것도, 갖고 싶은 것도 많지만, 그 중 하나도 포기할 수 없어요."
-			]
+			],
+			Thai: ["คุณครูอาจจะรู้แล้วก็ได้ ฉันน่ะ... เป็นคนโลภมากค่ะ","ทั้งสิ่งที่อยากทำ ทั้งสิ่งที่อยากได้ ฉันปล่อยไม่ได้สักอย่างเลยค่ะ"]
 		}
 	},
 	{
@@ -113,8 +116,8 @@ const AUDIO_DETAIL = [
 				"I want to make Momoyodou home to the best tea house in Kivotos!"
 			],
 			Chinese: [
-				"不管是让大家开心也好，还是获得生意上的成功！",
-				"以及让百夜堂成为基沃托斯最好的茶房！"
+				"不管是让大家露出笑容，还是在商业上取得成功！",
+				"还有让百夜堂成为基沃托斯首屈一指的茶店！"
 			],
 			TraditionalChinese: [
 				"讓大家感到開心，還有生意上的成功！",
@@ -123,7 +126,8 @@ const AUDIO_DETAIL = [
 			Korean: [
 				"모두를 즐겁게 하는 것도, 사업가로 성공하는 것도!",
 				"백야당을 키보토스 최고의 찻집으로 만드는 것도!"
-			]
+			],
+			Thai: ["ทั้งอยากทำให้ทุกคนมีรอยยิ้ม และอยากพัฒนาธุรกิจ","ทั้งเรื่องที่อยากทำให้เฮียกคิยาโค เป็นร้านน้ำชาอันดับหนึ่ง ในคิโวทอสด้วยค่ะ!"]
 		}
 	},
 	{
@@ -137,8 +141,8 @@ const AUDIO_DETAIL = [
 				"Of course...that includes you!"
 			],
 			Chinese: [
-				"我全部都不想放手！全部！",
-				"当然...对老师也是！"
+				"我，一件都不想放弃！一件都不想！",
+				"当然……我也不会放弃老师！"
 			],
 			TraditionalChinese: [
 				"我，全部都不想放棄！全部！",
@@ -147,7 +151,8 @@ const AUDIO_DETAIL = [
 			Korean: [
 				"저는, 전부 놓치고 싶지 않아요. 전부!",
 				"물론… 선생님도요!"
-			]
+			],
+			Thai: ["ฉันน่ะ... ไม่อยากจะ พลาดทุกอย่างนี้ค่ะ ทุกๆ อย่างเลยค่ะ!","แน่นอนว่า... เรื่องของคุณครูด้วยค่ะ!"]
 		}
 	}
 ];
@@ -259,7 +264,7 @@ function playVoiceline() {
 			track.play().catch(finish);
 
 			if (dialogBox) {
-				textbox.textContent = dialog[window.selectedLanguage][index];
+				textbox.textContent = getSubtitleText(dialog, window.selectedLanguage, index);
 				textbox.style.opacity = 1;
 			}
 		},
@@ -429,6 +434,16 @@ function setMouse(event) {
 	return { x: ax - canvas.width * positionX, y: ay - canvas.height * positionY };
 }
 
+function getSubtitleText(dialog, language, index) {
+	let text = dialog?.[language]?.[index];
+	if (text == null && language === 'Thai') {
+		language = 'English';
+		text = dialog?.[language]?.[index];
+	}
+	textbox.lang = subtitleLocales[language];
+	return text ?? "";
+}
+
 function updateSubtitleLanguage() {
 	let language = subtitleLanguagePreference;
 	if (language === 'auto') {
@@ -442,6 +457,8 @@ function updateSubtitleLanguage() {
 			language = 'Japanese';
 		} else if (primary === 'ko' || primary === 'korean' || primary === 'koreana') {
 			language = 'Korean';
+		} else if (primary === 'th' || primary === 'thai') {
+			language = 'Thai';
 		} else {
 			language = 'English';
 		}
@@ -451,7 +468,7 @@ function updateSubtitleLanguage() {
 	window.selectedLanguage = language;
 	textbox.lang = subtitleLocales[language];
 	const clip = currentTracks.at(-1);
-	if (dialogBox && clip) textbox.textContent = clip.dialog[language][clip.index];
+	if (dialogBox && clip) textbox.textContent = getSubtitleText(clip.dialog, language, clip.index);
 }
 
 function init() {
